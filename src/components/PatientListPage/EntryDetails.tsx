@@ -1,28 +1,21 @@
-import { Container, Typography, Box } from '@mui/material'
-import { Diagnose, Entry } from "../../types"
-
-interface EntryDetailsProps {
-    entry: Entry;
-    diagnoses: Diagnose[] | null
-}
+import { EntryDetailsProps } from "../../types"
+import EntryHospital from './EntryHospital';
+import EntryOccupational from './EntryOccupational';
+import EntryHealthCheck from './EntryHealthCheck';
 
 const EntryDetails = (props: EntryDetailsProps) => {
-    const { entry, diagnoses } = props
+    const { entry, diagnoses } = props;
 
-    return (
-        <Container sx={{ padding: 1, border: 1 }}>
-            <Typography variant="body1">{entry.date}</Typography>
-
-            <Typography fontStyle="italic"> {entry.description}</Typography>
-            <ul>
-                {entry.diagnosisCodes?.map((code) => (
-                    <li key={code}>
-                        {code}: {diagnoses?.find((diagnose) => diagnose.code === code)?.name}
-                    </li>
-                ))}
-            </ul>
-        </Container>
-    )
+    switch (entry.type) {
+        case 'Hospital':
+            return <EntryHospital entry={entry} diagnoses={diagnoses} />;
+        case 'OccupationalHealthcare':
+            return <EntryOccupational entry={entry} diagnoses={diagnoses} />;
+        case 'HealthCheck':
+            return <EntryHealthCheck entry={entry} diagnoses={diagnoses} />;
+        default:
+            return <div></div>
+    }
 }
 
 export default EntryDetails

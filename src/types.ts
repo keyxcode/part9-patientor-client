@@ -18,7 +18,7 @@ export interface BaseEntry {
   diagnosisCodes?: Array<Diagnose["code"]>;
 }
 
-enum HealthCheckRating {
+export enum HealthCheckRating {
   "Healthy" = 0,
   "LowRisk" = 1,
   "HighRisk" = 2,
@@ -67,3 +67,8 @@ export interface Patient {
 }
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+export interface EntryDetailsProps {
+  entry: Entry;
+  diagnoses: Diagnose[];
+}
