@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import patientService from '../../services/patients'
-import { Patient, Entry } from '../../types'
-import { Container, Typography, Box } from '@mui/material'
+import diagnoseService from '../../services/diagnoses'
+import { Diagnose, Patient, } from '../../types'
+import { Container, Typography } from '@mui/material'
 import { Female, Male } from '@mui/icons-material';
+import EntryDetails from './EntryDetails'
 
 const PatientDetaills = () => {
     const [patient, setPatient] = useState<Patient | null>(null)
     const id = useParams().id
+    const [diagnoses, setDiagnoses] = useState<Diagnose[]>([])
 
     useEffect(() => {
         if (id) {
@@ -15,13 +18,19 @@ const PatientDetaills = () => {
                 .getPatient(id)
                 .then(data => {
                     setPatient(data)
-                    console.log(data)
                 })
                 .catch(e => console.log(e))
         }
     }, [id])
 
-    console.log("hi")
+    useEffect(() => {
+        diagnoseService
+            .getDianoses()
+            .then(data => {
+                setDiagnoses(data)
+            })
+            .catch(e => console.log(e))
+    })
 
     return (
         <Container>
@@ -36,13 +45,7 @@ const PatientDetaills = () => {
             </Typography>
             <Typography component="h2" variant="h5" style={{ marginTop: 16 }}>entries</Typography>
             {patient?.entries.map(entry => (
-                <Container style={{ padding: 0 }}>
-                    <Typography display="inline" variant="body1">{entry.date}</Typography>
-                    <Typography display="inline" fontStyle="italic"> {entry.description}</Typography>
-                    <ul>
-                        {entry.diagnosisCodes?.map(code => (<li>{code}</li>))}
-                    </ul>
-                </Container>
+                <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
             ))}
 
         </Container>)
