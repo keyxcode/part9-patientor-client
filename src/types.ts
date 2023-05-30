@@ -72,3 +72,8 @@ export interface EntryDetailsProps {
   entry: Entry;
   diagnoses: Diagnose[];
 }
+
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+  ? Omit<T, K>
+  : never;
+export type NewHealthEntry = UnionOmit<Entry, "id">;

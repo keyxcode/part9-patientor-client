@@ -1,4 +1,4 @@
-import { Container, Typography, Box } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 import { Diagnose, HospitalEntry } from "../../types"
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 
