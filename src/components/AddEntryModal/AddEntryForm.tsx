@@ -1,13 +1,14 @@
 import { useState, SyntheticEvent } from "react";
-import { TextField, MenuItem, Select, Grid, Button, FormControl, Box, Typography } from '@mui/material';
-import { NewHealthEntry, HealthCheckEntry } from "../../types";
+import { TextField, MenuItem, Select, Grid, Button, FormControl, Box, Typography, InputLabel } from '@mui/material';
+import { NewHealthEntry, Diagnose } from "../../types";
 
 interface Props {
     onCancel: () => void;
     onSubmit: (values: NewHealthEntry) => void;
+    diagnoses: Diagnose[]
 }
 
-const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
+const AddEntryForm = ({ onCancel, onSubmit, diagnoses }: Props) => {
     const [formData, setFormData] = useState({
         description: "",
         date: "",
@@ -44,7 +45,7 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
     const handleChange = (event: { target: { name: any; value: any; }; }) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.name === "diagnosisCodes" ? [...event.target.value] : event.target.value
         }))
         console.log(formData)
     }
@@ -74,6 +75,8 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
                 <TextField
                     label="date"
                     name="date"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
                     fullWidth
                     value={formData.date}
                     onChange={handleChange}
@@ -85,20 +88,46 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
                     value={formData.specialist}
                     onChange={handleChange}
                 />
-                {formData.type === "HealthCheck" &&
-                    <TextField
-                        label="healthCheckRating"
-                        name="healthCheckRating"
-                        fullWidth
-                        value={formData.healthCheckRating}
+                <FormControl fullWidth>
+                    <InputLabel id="diagnosisCodeLabel">diagnosis codes</InputLabel>
+                    <Select
+                        labelId="diagnosisCodeLabel"
+                        name="diagnosisCodes"
+                        multiple
+                        value={formData.diagnosisCodes}
                         onChange={handleChange}
-                    />}
+                    >
+                        {diagnoses.map((d) => (
+                            <MenuItem key={d.code} value={d.code}>
+                                {d.code}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                {formData.type === "HealthCheck" &&
+                    <FormControl fullWidth>
+                        <InputLabel id="healthCheckLabel">health check rating</InputLabel>
+                        <Select
+                            labelId="healthCheckLabel"
+                            name="healthCheckRating"
+                            onChange={handleChange}
+                            value={formData.healthCheckRating}
+                        >
+                            <MenuItem value={0}>0</MenuItem>
+                            <MenuItem value={1}>1</MenuItem>
+                            <MenuItem value={2}>2</MenuItem>
+                            <MenuItem value={3}>3</MenuItem>
+                        </Select>
+                    </FormControl>
+                }
                 {formData.type === "Hospital" &&
                     <Box>
                         <Typography>discharge</Typography>
                         <TextField
                             label="discharge date"
                             name="dischargeDate"
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
                             fullWidth
                             value={formData.dischargeDate}
                             onChange={handleChange}
@@ -124,6 +153,8 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
                         <TextField
                             label="start date"
                             name="startDate"
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
                             fullWidth
                             value={formData.startDate}
                             onChange={handleChange}
@@ -131,6 +162,8 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
                         <TextField
                             label="end date"
                             name="endDate"
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
                             fullWidth
                             value={formData.endDate}
                             onChange={handleChange}

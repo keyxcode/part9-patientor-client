@@ -90,6 +90,7 @@ const PatientDetaills = () => {
                 onSubmit={submitNewEntry}
                 error={error}
                 onClose={closeModal}
+                diagnoses={diagnoses}
             />
             <Button variant="contained" onClick={() => openModal()}>
                 Add New Entry
